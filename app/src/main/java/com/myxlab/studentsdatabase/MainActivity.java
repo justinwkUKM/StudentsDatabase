@@ -99,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void deleteStudent(View view) {
+        //delete a student by his/her name
     }
 
     public void findStudent(View view) {
@@ -119,7 +120,11 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_delete_alllll) {
+
+            StudentDBHandler s= new StudentDBHandler(this, StudentDBHandler.DATABASE_NAME, null, StudentDBHandler.DATABASE_VERSION);
+            s.deleteAllStudents();
+            refreshList();
             return true;
         }
 
