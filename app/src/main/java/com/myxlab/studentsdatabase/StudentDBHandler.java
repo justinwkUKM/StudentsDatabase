@@ -16,7 +16,7 @@ import java.util.List;
 public class StudentDBHandler extends SQLiteOpenHelper {
 
 
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "STUDENTSDB.db";
     public static final String DATABASE_TABLE_STUDENTS = "Students";
     public static final String COLUMN_ID = "id";

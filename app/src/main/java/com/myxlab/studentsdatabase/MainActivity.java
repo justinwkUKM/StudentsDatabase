@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     Button btAdd, btDelete, btFind;
     EditText etStudent, etMetricNo;
     ListView studentLV;
-    List<StudentData>  studentDataList;
+    List<StudentData> studentDataList;
     ArrayAdapter studentListAdapter;
     StudentDBHandler studentDBHandler;
 
@@ -39,11 +39,10 @@ public class MainActivity extends AppCompatActivity {
         etMetricNo = (EditText) findViewById(R.id.editTextMetric);
         studentLV = (ListView) findViewById(R.id.lvShowStudentRecords);
 
-        studentDBHandler = new StudentDBHandler(this, StudentDBHandler.DATABASE_NAME, null , StudentDBHandler.DATABASE_VERSION);
-        studentDBHandler.addStudent(new StudentData("Waqas","P80535"));
-        studentDBHandler.addStudent(new StudentData("Amir","P80535"));
-        studentDBHandler.addStudent(new StudentData("Amin","P80535"));
-
+        studentDBHandler = new StudentDBHandler(this, StudentDBHandler.DATABASE_NAME, null, StudentDBHandler.DATABASE_VERSION);
+        studentDBHandler.addStudent(new StudentData("Waqas", "P80535"));
+        /*studentDBHandler.addStudent(new StudentData("Amir", "P80535"));
+        studentDBHandler.addStudent(new StudentData("Amin", "P80535"));*/
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -65,11 +64,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void refreshList() {
-        StudentDBHandler studentDBHandler = new StudentDBHandler(this, StudentDBHandler.DATABASE_NAME, null , StudentDBHandler.DATABASE_VERSION);
+        StudentDBHandler studentDBHandler = new StudentDBHandler(this, StudentDBHandler.DATABASE_NAME, null, StudentDBHandler.DATABASE_VERSION);
 
-       studentDataList=  studentDBHandler.findAllStudents();
+        studentDataList = studentDBHandler.findAllStudents();
         List lisOfNames = new ArrayList();
-        for(int i = 0; i<studentDataList.size(); i++){
+        for (int i = 0; i < studentDataList.size(); i++) {
             lisOfNames.add(studentDataList.get(i).getStudentName());
         }
 
@@ -87,6 +86,12 @@ public class MainActivity extends AppCompatActivity {
                     .setAction("Action", null).show();
         } else {
             // we need to save the data in the database
+            StudentDBHandler s = new StudentDBHandler(this, StudentDBHandler.DATABASE_NAME, null, StudentDBHandler.DATABASE_VERSION);
+            StudentData studentData = new StudentData(studentName, studentMetric);
+            s.addStudent(studentData);
+            etMetricNo.setText("");
+            etStudent.setText("");
+            refreshList();
 
         }
 
