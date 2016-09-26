@@ -8,10 +8,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +60,36 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        //constructor for the DB
+        final StudentDBHandler studentDBHandler = new StudentDBHandler(this, StudentDBHandler.DATABASE_NAME, null, StudentDBHandler.DATABASE_VERSION);
+
+
+        studentLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                String value = (String) studentLV.getItemAtPosition(position);
+                //call the method findstudentbyname which requires a string a an input.
+                //the methid will return a StudentData object
+                StudentData studentData = studentDBHandler.findStudentByName(value);
+                if (studentData != null){
+                    Snackbar.make(view, "Student Metric Number : "+ studentData.getMetricNumber(), Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }else{
+                    Snackbar.make(view, "No Match Found in the Student Database", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+
+                Toast.makeText(MainActivity.this, value, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        studentLV.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                //update the database here
+                return true;
+            }
+        });
 
         refreshList();
 
@@ -92,17 +124,36 @@ public class MainActivity extends AppCompatActivity {
             etMetricNo.setText("");
             etStudent.setText("");
             refreshList();
-
         }
-
-
     }
 
     public void deleteStudent(View view) {
         //delete a student by his/her name
+        StudentDBHandler s = new StudentDBHandler(this, StudentDBHandler.DATABASE_NAME, null, StudentDBHandler.DATABASE_VERSION);
+        boolean result = s.deleteStudent(etStudent.getText().toString());
+        if(result){
+            Snackbar.make(view, "Record deleted", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+        }else{
+            Snackbar.make(view, "Record not found", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+        }
+        refreshList();
     }
 
     public void findStudent(View view) {
+
+        String value = etStudent.getText().toString();
+        StudentData studentData = studentDBHandler.findStudentByName(value);
+        if (studentData != null){
+            Snackbar.make(view, "Student Metric Number : "+ studentData.getMetricNumber(), Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+        }else{
+            Snackbar.make(view, "No Match Found in the Student Database", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+        }
+
+        Toast.makeText(MainActivity.this, value, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -122,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_delete_alllll) {
 
-            StudentDBHandler s= new StudentDBHandler(this, StudentDBHandler.DATABASE_NAME, null, StudentDBHandler.DATABASE_VERSION);
+            StudentDBHandler s = new StudentDBHandler(this, StudentDBHandler.DATABASE_NAME, null, StudentDBHandler.DATABASE_VERSION);
             s.deleteAllStudents();
             refreshList();
             return true;

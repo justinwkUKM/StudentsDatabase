@@ -77,7 +77,7 @@ public class StudentDBHandler extends SQLiteOpenHelper {
 
     //method to find a student by his/her name
     public StudentData findStudentByName(String name) {
-        String queryFindStudent = "Select *  From " + DATABASE_TABLE_STUDENTS + " WHERE " + COLUMN_NAME + " = \'" + name + "\"";
+        String queryFindStudent = "Select *  From " + DATABASE_TABLE_STUDENTS + " WHERE " + COLUMN_NAME + " = \"" + name + "\"";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(queryFindStudent, null);
         StudentData studentData = new StudentData();
